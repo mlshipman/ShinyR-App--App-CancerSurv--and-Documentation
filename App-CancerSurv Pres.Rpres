@@ -1,0 +1,65 @@
+App - Cancer Survival Calculation
+========================================================
+author: Michael Shipman
+date: August 24, 2014 
+***
+
+![alt text](www/Purple_ribbon_svg.png)
+
+The Cancer Survival Calculation Application
+========================================================
+The 'App-CancerSurv' is an interactive HTML5 application written in the R language and hosted on ShinyApp.io virtual server. 
+
+It provides the user with an awareness of the following points as applied seperately to Women and Men.
+- Statistical probability of developing cancer within a lifetime.
+- Statistical probability of dying of cancer within a lifetime.
+- Calculated probability of surviving cancer if cancer is developed.
+- Statistics as related to development of cancer in different body sites for both women and men.
+
+The Application's Data Source and Calculation
+========================================================
+The application is based on the 2014 American Cancer Society's, "The Lifetime Probability of Developing and Dying from Cancer 2008-2010" study available at their website.  Thanks to the ACS for public use of the data.  
+
+The survival calculation is a function of the probabilities of development and dying of cancer in a selected body site.  
+
+$$Prob(Survival) = (1 - Prob(Death)/Prob(Development))*100%$$   
+
+<small>The survival calculation is NOT provided by the ACS in their dataset, nor is the applicationto be taken as medical advice in any way!!!</small>
+
+Application User Interaction
+========================================================
+The 'App-CancerSurv' application allows the user to select a specific body site of interest. The drop-down site categories in the user interface include... 
+```{r, echo = FALSE}
+library(xlsx)
+acsdata <- read.xlsx("~/R/App-CancerSurv/ACSDiagData.xlsx",
+                     sheetIndex = 1, header = TRUE)
+sites <- as.character(acsdata$Site[1:24])
+cat(sites, sep = ", ", fill = TRUE)
+```
+
+Example: Site Selected = Pancrease
+========================================================
+An example of the calculated survival rate of Woman or a Man that has developed pancreatic cancer would be displayed as follows.  
+
+### Probability of Survival if Developed Cancer
+```{r, echo = FALSE}
+PrDevWmn <- as.numeric(as.character(acsdata[41, 3]))
+PrDevMn <- as.numeric(as.character(acsdata[17, 3]))
+PrDthWmn <- as.numeric(as.character(acsdata[41, 5]))
+PrDthMn <- as.numeric(as.character(acsdata[17, 5]))
+PrSrvlWmn <- round((1 - (PrDthWmn/PrDevWmn))*100, 2)
+PrSrvlMn <- round((1 - (PrDthMn/PrDevMn))*100, 2)
+paste("Prob of Survival for Women = ", PrSrvlWmn, "%")
+paste("Prob of Survival for Men = ", PrSrvlMn, "%")
+```
+
+Link to the Cancer Survival R Application
+========================================================
+The Cancer Survival application is hosted on the ShinyApp.io provided by the R studio, Inc. A big thanks to those guys for helping with this project.  
+
+The URL Link to the application...
+http://mlshipman.shinyapps.io/App-CancerSurv  
+
+This Shiny R application is a class project for "Creating Data Products" offered on Coursera.org.  The course is provided by John's Hopkins University as one course in the "Data Science Specialization" series.  A big thank you to their time and effort as well!
+
+
